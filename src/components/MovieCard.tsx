@@ -10,12 +10,11 @@ import {
   IconButton,
   Typography,
 } from '@mui/material'
+import { useFavourites } from '@/context/favourites'
+import { usePlaylists } from '@/context/playlists'
+import type { Movie } from '@/types/movie'
+import { getPosterUrl } from '@/types/movie'
 import AddToPlaylistMenu from './AddToPlaylistMenu'
-import { useFavourites } from '../context/favourites'
-import { usePlaylists } from '../context/playlists'
-import { getSquareFocusSx } from '../styles/focusStyles'
-import type { Movie } from '../types/movie'
-import { getPosterUrl } from '../types/movie'
 
 interface MovieCardProps {
   movie: Movie
@@ -75,9 +74,7 @@ function MovieCard({ movie, playlistId }: MovieCardProps) {
             <IconButton
               size="small"
               color="error"
-              disableRipple
               aria-label={favorited ? 'Bỏ yêu thích' : 'Yêu thích'}
-              sx={getSquareFocusSx('error.main')}
               onClick={() => toggleFavorite(movie)}
             >
               {favorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
@@ -86,9 +83,7 @@ function MovieCard({ movie, playlistId }: MovieCardProps) {
               <IconButton
                 size="small"
                 color="error"
-                disableRipple
                 aria-label="Xóa khỏi playlist"
-                sx={getSquareFocusSx('error.main')}
                 onClick={() => removeMovieFromPlaylist(playlistId, movie.id)}
               >
                 <PlaylistRemoveIcon />

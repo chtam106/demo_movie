@@ -6,14 +6,14 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { Movie } from '../types/movie'
+import type { Movie } from '@/types/movie'
 import {
   WATCH_LATER_ID,
   WATCH_LATER_NAME,
   type Playlist,
-} from '../types/playlist'
+} from '@/types/playlist'
 
-const PLAYLISTS_KEY = 'demo_movie_playlists'
+const PLAYLISTS_KEY = 'DEMO_MOVIE_PLAYLISTS'
 
 const createWatchLater = (): Playlist => ({
   id: WATCH_LATER_ID,

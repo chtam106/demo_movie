@@ -7,9 +7,9 @@ import {
   Typography,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
-import MovieCard from '../components/MovieCard'
-import { getPopularMovies } from '../services/movies'
-import type { Movie } from '../types/movie'
+import MovieCard from '@/components/MovieCard'
+import { getPopularMovies } from '@/services/movies'
+import type { Movie } from '@/types/movie'
 
 function Home() {
   const [movies, setMovies] = useState<Movie[]>([])

@@ -1,6 +1,6 @@
 import { Container, Grid, Typography } from '@mui/material'
-import MovieCard from '../components/MovieCard'
-import { useFavourites } from '../context/favourites'
+import MovieCard from '@/components/MovieCard'
+import { useFavourites } from '@/context/favourites'
 
 function Favourites() {
   const { favorites } = useFavourites()

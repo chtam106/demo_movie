@@ -6,9 +6,9 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { Movie } from '../types/movie'
+import type { Movie } from '@/types/movie'
 
-const FAVOURITES_KEY = 'demo_movie_favorites'
+const FAVOURITES_KEY = 'DEMO_MOVIE_FAVORITES'
 
 const loadFavourites = (): Movie[] => {
   try {
