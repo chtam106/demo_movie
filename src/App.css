@@ -1,0 +1,21 @@
+.nav {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav a.active {
+  color: var(--text-h);
+  font-weight: 500;
+}
+
+.main {
+  flex: 1;
+  padding: 1.5rem;
+}
