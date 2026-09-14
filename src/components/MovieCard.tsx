@@ -1,27 +1,30 @@
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import {
   Box,
-  Button,
   Card,
-  CardActions,
   CardContent,
   CardMedia,
   Chip,
   IconButton,
   Typography,
 } from '@mui/material'
+import AddToPlaylistMenu from './AddToPlaylistMenu'
 import { useFavourites } from '../context/favourites'
+import { usePlaylists } from '../context/playlists'
+import { getSquareFocusSx } from '../styles/focusStyles'
 import type { Movie } from '../types/movie'
 import { getPosterUrl } from '../types/movie'
 
 interface MovieCardProps {
   movie: Movie
+  playlistId?: string
 }
 
-function MovieCard({ movie }: MovieCardProps) {
+function MovieCard({ movie, playlistId }: MovieCardProps) {
   const { isFavorite, toggleFavorite } = useFavourites()
+  const { removeMovieFromPlaylist } = usePlaylists()
   const favorited = isFavorite(movie.id)
   const posterUrl = getPosterUrl(movie.poster_path)
 
@@ -47,16 +50,53 @@ function MovieCard({ movie }: MovieCardProps) {
         <Typography gutterBottom variant="h6" component="h2" noWrap>
           {movie.title}
         </Typography>
-        <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
-          <Chip
-            label={`⭐ ${movie.vote_average.toFixed(1)}`}
-            size="small"
-            color="primary"
-            variant="outlined"
-          />
-          {movie.release_date && (
-            <Chip label={movie.release_date.slice(0, 4)} size="small" />
-          )}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 1,
+            mb: 1,
+          }}
+        >
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            <Chip
+              label={`⭐ ${movie.vote_average.toFixed(1)}`}
+              size="small"
+              color="primary"
+              variant="outlined"
+            />
+            {movie.release_date && (
+              <Chip label={movie.release_date.slice(0, 4)} size="small" />
+            )}
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+            <IconButton
+              size="small"
+              color="error"
+              disableRipple
+              aria-label={favorited ? 'Bỏ yêu thích' : 'Yêu thích'}
+              sx={getSquareFocusSx('error.main')}
+              onClick={() => toggleFavorite(movie)}
+            >
+              {favorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+            </IconButton>
+            {playlistId ? (
+              <IconButton
+                size="small"
+                color="error"
+                disableRipple
+                aria-label="Xóa khỏi playlist"
+                sx={getSquareFocusSx('error.main')}
+                onClick={() => removeMovieFromPlaylist(playlistId, movie.id)}
+              >
+                <PlaylistRemoveIcon />
+              </IconButton>
+            ) : (
+              <AddToPlaylistMenu movie={movie} />
+            )}
+          </Box>
         </Box>
         <Typography
           variant="body2"
@@ -71,24 +111,6 @@ function MovieCard({ movie }: MovieCardProps) {
           {movie.overview || 'Chưa có mô tả.'}
         </Typography>
       </CardContent>
-      <CardActions sx={{ p: 2, pt: 0, gap: 1 }}>
-        <IconButton
-          color="error"
-          aria-label={favorited ? 'Bỏ yêu thích' : 'Yêu thích'}
-          onClick={() => toggleFavorite(movie)}
-        >
-          {favorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        </IconButton>
-        <Button
-          fullWidth
-          variant="outlined"
-          color="secondary"
-          startIcon={<PlaylistAddIcon />}
-          disabled
-        >
-          Thêm playlist
-        </Button>
-      </CardActions>
     </Card>
   )
 }
