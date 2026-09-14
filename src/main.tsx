@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
 import { FavouritesProvider } from './context/favourites.tsx'
+import { PlaylistsProvider } from './context/playlists.tsx'
 import './index.css'
 
 const theme = createTheme({
@@ -32,7 +33,9 @@ createRoot(document.getElementById('root')!).render(
       <CssBaseline />
       <BrowserRouter>
         <FavouritesProvider>
-          <App />
+          <PlaylistsProvider>
+            <App />
+          </PlaylistsProvider>
         </FavouritesProvider>
       </BrowserRouter>
     </ThemeProvider>

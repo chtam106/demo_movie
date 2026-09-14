@@ -2,11 +2,17 @@ import { AppBar, Box, Container, Tab, Tabs, Toolbar, Typography } from '@mui/mat
 import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import Favourites from './pages/Favourites'
 import Home from './pages/Home'
+import Playlist from './pages/Playlist'
 
 function AppNav() {
   const location = useLocation()
 
-  const currentTab = location.pathname === '/favourites' ? '/favourites' : '/'
+  const currentTab =
+    location.pathname === '/favourites'
+      ? '/favourites'
+      : location.pathname === '/playlist'
+        ? '/playlist'
+        : '/'
 
   return (
     <AppBar position="static" elevation={0}>
@@ -34,6 +40,13 @@ function AppNav() {
             to="/favourites"
             sx={{ color: 'inherit' }}
           />
+          <Tab
+            label="Playlist"
+            value="/playlist"
+            component={NavLink}
+            to="/playlist"
+            sx={{ color: 'inherit' }}
+          />
         </Tabs>
       </Toolbar>
     </AppBar>
@@ -48,6 +61,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/favourites" element={<Favourites />} />
+          <Route path="/playlist" element={<Playlist />} />
         </Routes>
       </Container>
     </Box>
