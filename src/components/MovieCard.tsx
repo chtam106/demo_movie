@@ -1,3 +1,4 @@
+import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import {
@@ -11,6 +12,7 @@ import {
   IconButton,
   Typography,
 } from '@mui/material'
+import { useFavourites } from '../context/favourites'
 import type { Movie } from '../types/movie'
 import { getPosterUrl } from '../types/movie'
 
@@ -19,6 +21,8 @@ interface MovieCardProps {
 }
 
 function MovieCard({ movie }: MovieCardProps) {
+  const { isFavorite, toggleFavorite } = useFavourites()
+  const favorited = isFavorite(movie.id)
   const posterUrl = getPosterUrl(movie.poster_path)
 
   return (
@@ -68,8 +72,12 @@ function MovieCard({ movie }: MovieCardProps) {
         </Typography>
       </CardContent>
       <CardActions sx={{ p: 2, pt: 0, gap: 1 }}>
-        <IconButton color="error" disabled aria-label="Yêu thích">
-          <FavoriteBorderIcon />
+        <IconButton
+          color="error"
+          aria-label={favorited ? 'Bỏ yêu thích' : 'Yêu thích'}
+          onClick={() => toggleFavorite(movie)}
+        >
+          {favorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
         <Button
           fullWidth
