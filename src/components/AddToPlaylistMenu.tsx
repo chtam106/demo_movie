@@ -55,8 +55,8 @@ function AddToPlaylistMenu({ movie }: AddToPlaylistMenuProps) {
     <>
       <IconButton
         size="small"
-        color="secondary"
         aria-label="Thêm playlist"
+        sx={{ color: 'grey.300' }}
         onClick={(event) => setAnchorEl(event.currentTarget)}
       >
         <PlaylistAddIcon />

@@ -1,6 +1,7 @@
 import {
   Alert,
   Box,
+  Button,
   CircularProgress,
   Container,
   Grid,
@@ -17,38 +18,31 @@ function Home() {
   const [query, setQuery] = useState('')
   const debouncedQuery = useDebouncedValue(query.trim(), 400)
   const [movies, setMovies] = useState<Movie[]>([])
-  const [popularMovies, setPopularMovies] = useState<Movie[]>([])
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
   const [initialLoading, setInitialLoading] = useState(true)
   const [searching, setSearching] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const isSearching = debouncedQuery.length > 0
+  const hasMore = page < totalPages
 
   useEffect(() => {
-    getPopularMovies()
-      .then((data) => {
-        setPopularMovies(data)
-        setMovies(data)
-      })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setInitialLoading(false))
-  }, [])
-
-  useEffect(() => {
-    if (!debouncedQuery) {
-      setMovies(popularMovies)
-      setSearching(false)
-      return
-    }
-
     let ignore = false
     setSearching(true)
     setError(null)
 
-    searchMovies(debouncedQuery)
-      .then((data) => {
+    const fetchMovies = isSearching
+      ? searchMovies(debouncedQuery, 1)
+      : getPopularMovies(1)
+
+    fetchMovies
+      .then(({ results, totalPages: pages }) => {
         if (!ignore) {
-          setMovies(data)
+          setMovies(results)
+          setPage(1)
+          setTotalPages(pages)
         }
       })
       .catch((err: Error) => {
@@ -59,13 +53,34 @@ function Home() {
       .finally(() => {
         if (!ignore) {
           setSearching(false)
+          setInitialLoading(false)
         }
       })
 
     return () => {
       ignore = true
     }
-  }, [debouncedQuery, popularMovies])
+  }, [debouncedQuery])
+
+  const handleLoadMore = async () => {
+    const nextPage = page + 1
+    setLoadingMore(true)
+    setError(null)
+
+    try {
+      const { results, totalPages: pages } = isSearching
+        ? await searchMovies(debouncedQuery, nextPage)
+        : await getPopularMovies(nextPage)
+
+      setMovies((prev) => [...prev, ...results])
+      setPage(nextPage)
+      setTotalPages(pages)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Không thể tải thêm phim')
+    } finally {
+      setLoadingMore(false)
+    }
+  }
 
   if (initialLoading) {
     return (
@@ -89,7 +104,7 @@ function Home() {
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         {isSearching
-          ? `Tìm thấy ${movies.length} phim cho "${debouncedQuery}"`
+          ? `Hiển thị ${movies.length} phim cho "${debouncedQuery}"`
           : 'Danh sách phim đang được xem nhiều nhất từ TMDB'}
       </Typography>
 
@@ -108,13 +123,27 @@ function Home() {
           {isSearching ? 'Không tìm thấy phim nào.' : 'Không có phim để hiển thị.'}
         </Typography>
       ) : (
-        <Grid container spacing={3}>
-          {movies.map((movie) => (
-            <Grid key={movie.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
-              <MovieCard movie={movie} />
-            </Grid>
-          ))}
-        </Grid>
+        <>
+          <Grid container spacing={3}>
+            {movies.map((movie) => (
+              <Grid key={movie.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+                <MovieCard movie={movie} />
+              </Grid>
+            ))}
+          </Grid>
+
+          {hasMore && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <Button
+                variant="outlined"
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+              >
+                {loadingMore ? 'Đang tải...' : 'Xem thêm'}
+              </Button>
+            </Box>
+          )}
+        </>
       )}
     </Container>
   )
