@@ -1,53 +1,57 @@
-import { AppBar, Box, Container, Tab, Tabs, Toolbar, Typography } from '@mui/material'
-import { NavLink, Route, Routes, useLocation } from 'react-router-dom'
+import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material'
+import { NavLink, Route, Routes } from 'react-router-dom'
 import Favourites from './pages/Favourites'
 import Home from './pages/Home'
 import Playlist from './pages/Playlist'
 
+const navButtonSx = {
+  minWidth: 'auto',
+  px: 2,
+  py: 1,
+  borderRadius: 0,
+  opacity: 0.75,
+  borderBottom: '2px solid transparent',
+  '&[aria-current="page"]': {
+    opacity: 1,
+    fontWeight: 700,
+    borderBottomColor: 'secondary.main',
+  },
+}
+
 function AppNav() {
-  const location = useLocation()
-
-  const currentTab =
-    location.pathname === '/favourites'
-      ? '/favourites'
-      : location.pathname === '/playlist'
-        ? '/playlist'
-        : '/'
-
   return (
     <AppBar position="static" elevation={0}>
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
           Demo Movie
         </Typography>
-        <Tabs
-          value={currentTab}
-          textColor="inherit"
-          indicatorColor="secondary"
-          sx={{ minHeight: 48 }}
-        >
-          <Tab
-            label="Home"
-            value="/"
+        <Box component="nav" sx={{ display: 'flex', gap: 0.5 }}>
+          <Button
             component={NavLink}
             to="/"
-            sx={{ color: 'inherit' }}
-          />
-          <Tab
-            label="Favourites"
-            value="/favourites"
+            end
+            color="inherit"
+            sx={navButtonSx}
+          >
+            Home
+          </Button>
+          <Button
             component={NavLink}
             to="/favourites"
-            sx={{ color: 'inherit' }}
-          />
-          <Tab
-            label="Playlist"
-            value="/playlist"
+            color="inherit"
+            sx={navButtonSx}
+          >
+            Favourites
+          </Button>
+          <Button
             component={NavLink}
             to="/playlist"
-            sx={{ color: 'inherit' }}
-          />
-        </Tabs>
+            color="inherit"
+            sx={navButtonSx}
+          >
+            Playlist
+          </Button>
+        </Box>
       </Toolbar>
     </AppBar>
   )

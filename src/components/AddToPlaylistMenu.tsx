@@ -16,9 +16,8 @@ import {
   TextField,
 } from '@mui/material'
 import { useState } from 'react'
-import { usePlaylists } from '../context/playlists'
-import { getSquareFocusSx } from '../styles/focusStyles'
-import type { Movie } from '../types/movie'
+import { usePlaylists } from '@/context/playlists'
+import type { Movie } from '@/types/movie'
 
 interface AddToPlaylistMenuProps {
   movie: Movie
@@ -57,9 +56,7 @@ function AddToPlaylistMenu({ movie }: AddToPlaylistMenuProps) {
       <IconButton
         size="small"
         color="secondary"
-        disableRipple
         aria-label="Thêm playlist"
-        sx={getSquareFocusSx('grey.400')}
         onClick={(event) => setAnchorEl(event.currentTarget)}
       >
         <PlaylistAddIcon />
