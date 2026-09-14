@@ -4,6 +4,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.tsx'
+import { FavouritesProvider } from './context/favourites.tsx'
 import './index.css'
 
 const theme = createTheme({
@@ -30,7 +31,9 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <App />
+        <FavouritesProvider>
+          <App />
+        </FavouritesProvider>
       </BrowserRouter>
     </ThemeProvider>
   </StrictMode>,
